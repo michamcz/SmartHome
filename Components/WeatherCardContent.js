@@ -37,33 +37,64 @@ export default function WeatherCardContent({ deviceObject }) {
 
   return (
     <View style={styles.containerBottomWrap}>
-      <View style={styles.containerBottom1}>
-        <Text style={styles.text}>Temp: {temperature} oC</Text>
-        <Text style={styles.text}>Hum: {humidity} %</Text>
-        <Text style={styles.text}>Press: {pressure} hPa</Text>
+      <View style={styles.containerBottomInnerLeft}>
+        <Text style={styles.textTemp}>{temperature} °C</Text>
       </View>
+      <View style={styles.containerBottomInnerRight}>
+        <Text style={styles.valueHumPress}>{humidity} %</Text>
+        <Text style={styles.labelHumPress}>Humidity</Text>
+        <Text style={styles.valueHumPress}>{pressure} hPa</Text>
+        <Text style={styles.labelHumPress}>Pressure</Text>
+      </View>
+
     </View>
   )
 }
 const styles = StyleSheet.create({
-  containerBottom1: {
-    flex: 0.5,
-    flexDirection: "row",
-    backgroundColor: '#121212', //'#393E46'
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingBottom: 5,
-    alignSelf: 'stretch',
-  },
   containerBottomWrap: {
-    flex: 0.70,
+    flex: 1,
+    //alignItems: 'center',
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    backgroundColor: '#121212',
+    paddingHorizontal: 5,
+    paddingBottom: 5,
+  },
+
+  containerBottomInnerLeft: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
     alignSelf: 'stretch',
+    backgroundColor: '#1d1d1d',
+    borderRadius: 10,
+    marginVertical: 5,
+    marginHorizontal: 10,
   },
+
+  containerBottomInnerRight: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    backgroundColor: '#121212',
+  },
+
   text: {
     fontSize: 18,
     color: "#CCCCCC",
   },
+  textTemp: {
+    fontSize: 30,
+    color: "#CCCCCC",
+  },
+  valueHumPress: {
+    fontSize: 18,
+    color: "#CCCCCC",
+  },
+  labelHumPress: {
+    fontSize: 15,
+    color: "#393E46",
+  }
 });

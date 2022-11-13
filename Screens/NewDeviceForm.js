@@ -11,7 +11,7 @@ export default function NewDeviceForm({ navigation }) {
   const [password, setpassword] = React.useState('');
   const [ipAddress, setipAddress] = React.useState('');
   const [gateway, setGateway] = React.useState('');
-  const [mask, setmask] = React.useState('');
+  const [mask, setmask] = React.useState('255.255.255.0');
   const [nameParsed, setnameParsed] = React.useState(true);
   const [SSIDParsed, setSSIDParsed] = React.useState(true);
   const [passParsed, setpassParsed] = React.useState(true);
@@ -137,6 +137,7 @@ export default function NewDeviceForm({ navigation }) {
           value={ipAddress}
           placeholder="___.___.___.___"
           onChangeText={ipAddress => setipAddress(ipAddress)}
+          keyboardType="numeric"
         />
         {
           (!ipParsed) ? (
@@ -169,6 +170,7 @@ export default function NewDeviceForm({ navigation }) {
           value={gateway}
           placeholder="___.___.___.___"
           onChangeText={gateway => setGateway(gateway)}
+          keyboardType="numeric"
         />
         {
           (!gatewayParsed) ? (
@@ -201,6 +203,7 @@ export default function NewDeviceForm({ navigation }) {
           value={mask}
           placeholder="___.___.___.___"
           onChangeText={mask => setmask(mask)}
+          keyboardType="numeric"
         />
         {
           (!maskParsed) ? (

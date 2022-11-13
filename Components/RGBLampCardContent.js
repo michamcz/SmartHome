@@ -13,14 +13,12 @@ import { PatternArray } from '../assets/PatternArray'
 
 export default function CurtainsCardContent({ deviceObject }) {
 
-  const [brightnessValue, setBrightnessValue] = useState(100);
+  const [brightnessValue, setBrightnessValue] = useState(((deviceObject.brightness * 100) / 255).toFixed(0) || 50);
   const [ledStatus, setLedStatus] = useState(null);
   const [currentColor, setCurrentColor] = useState(deviceObject.color || '#FF0000');
-  const [tempColor, setTempColor] = useState(deviceObject.color || '#FF0000');
-  const [currentSpeed, setCurrentSpeed] = useState(60);
-  const [currentEffect, setCurrentEffect] = useState(null);
+  const [currentSpeed, setCurrentSpeed] = useState(deviceObject.speed || 50);
+  const [currentEffect, setCurrentEffect] = useState(deviceObject.effect || 1);
   const [currentPalette, setCurrentPalette] = useState(parseInt(deviceObject.palette) || 0);
-  const [tempPalette, setTempPalette] = useState(parseInt(deviceObject.palette) || 0);
   const [showColorModal, setShowColorModal] = useState(false)
   const [showEffectModal, setShowEffectModal] = useState(false)
 
@@ -73,7 +71,7 @@ export default function CurtainsCardContent({ deviceObject }) {
   }
 
   useEffect(() => {
-    //console.log(currentPalette)
+    setBrightnessValue(((deviceObject.brightness * 100) / 255).toFixed(0));
     if (parseInt(deviceObject.effect) == 0) {
       setLedStatus(false)
       setCurrentEffect(1)
@@ -162,15 +160,24 @@ export default function CurtainsCardContent({ deviceObject }) {
                     noSnap={true}
                     row={false}
                     palette={['#ffffff', '#d11cd5', '#0000ff', '#00aeef', '#03fca5', '#00ff00', '#FFFF00', '#ff4400', '#ff0000']}
-                    onColorChangeComplete={(color) => { setTempColor(color) }}
+                    onColorChangeComplete={(color) => {
+                      setCurrentColor(color);
+                      applyColor(color);
+                    }}
                   />
                 ) : (
                   <View style={styles.gradientModalContent}>
                     {
-                      PatternArray.map(el => {
+                      PatternArray.map((el, index) => {
                         return (
                           <TouchableOpacity
-                            onPress={() => setTempPalette(el.id)}
+                            onPress={() => {
+                              if (currentEffect == 1) {
+                                setCurrentPalette(el.id)
+                                applyPalette(el.id)
+                              }
+                            }}
+                            key={index}
                           >
                             <LinearGradient
                               colors={[el.color1, el.color2, el.color3]}
@@ -178,7 +185,7 @@ export default function CurtainsCardContent({ deviceObject }) {
                               key={el.id}
                               start={{ x: 0.7, y: 0 }}>
                               {
-                                (tempPalette == el.id ? (
+                                (currentPalette == el.id ? (
                                   <MaterialCommunityIcons name="check" color='#EEEEEE' size={22} />
                                 ) : (null))
                               }
@@ -191,22 +198,14 @@ export default function CurtainsCardContent({ deviceObject }) {
                 )
               }
             </Modal.Body>
-            <Modal.Footer style={{ backgroundColor: '#1f1f1f' }}>
+            <Modal.Footer style={{ backgroundColor: '#1f1f1f', borderWidth: 2, borderColor: '#1f1f1f' }}>
               <TouchableOpacity
                 style={styles.buttonConfirm}
                 onPress={() => {
-                  if (currentEffect == 1) {
-                    setCurrentPalette(tempPalette)
-                    applyPalette(tempPalette)
-                  }
-                  else {
-                    setCurrentColor(tempColor)
-                    applyColor(tempColor)
-                  }
                   setShowColorModal(false)
                 }}
               >
-                <Text style={styles.text}>Confirm</Text>
+                <Text style={styles.text}>Close</Text>
               </TouchableOpacity>
             </Modal.Footer>
           </Modal.Content>
@@ -219,7 +218,7 @@ export default function CurtainsCardContent({ deviceObject }) {
                 EffectsList.map(effect => <EffectsListTile key={effect.id} effectTitle={effect.title} effectId={effect.id} onClick={handleEffectClick} currentEffect={currentEffect} />)
               }
             </Modal.Body>
-            <Modal.Footer style={{ backgroundColor: '#1f1f1f' }}>
+            <Modal.Footer style={{ backgroundColor: '#1f1f1f', borderWidth: 2, borderColor: '#1f1f1f' }}>
               <TouchableOpacity
                 style={styles.buttonConfirm}
                 onPress={() => {
@@ -253,7 +252,6 @@ export default function CurtainsCardContent({ deviceObject }) {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              setTempPalette(currentPalette)
               setShowColorModal(true)
             }}
           >
@@ -276,7 +274,7 @@ export default function CurtainsCardContent({ deviceObject }) {
         <View style={styles.sliderView}>
           <Slider
             style={{ height: 35 }}
-            value={100}
+            value={Number.parseFloat(((deviceObject.brightness * 100) / 255).toFixed(0))}
             minimumValue={0}
             maximumValue={100}
             minimumTrackTintColor="#57CC99"
@@ -296,7 +294,7 @@ export default function CurtainsCardContent({ deviceObject }) {
         <View style={styles.sliderView}>
           <Slider
             style={{ height: 35 }}
-            value={20}
+            value={50}
             minimumValue={5}
             maximumValue={30}
             minimumTrackTintColor="#57CC99"
@@ -417,14 +415,16 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   modal: {
-    backgroundColor: 'white',
-    padding: 20,
+    backgroundColor: '#000000',
+    padding: 15,
+    borderWidth: 0,
+    borderColor: '#000000',
   },
   gradientModalContent: {
     alignContent: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    padding: 20,
+    paddingTop: 15,
     flex: 1,
     flexWrap: 'wrap',
   },

@@ -77,14 +77,14 @@ export default async function syncData(devObject) {
         })
         return true
       }
-      else if (JSON.stringify(data.whatAmI) == 2) {
+      else if (JSON.stringify(data.whatAmI) == 2) {    //WS2812B
         await mergeItem(devObject.name, {
           type: JSON.stringify(data.whatAmI) || '0',
           effect: JSON.stringify(data.currentPattern) || '1',
           color: RGBToHex(data.currentRedColor, data.currentGreenColor, data.currentBlueColor) || '#FF0000',
-          palette: JSON.stringify(data.currentPalette) || '0',
+          palette: JSON.stringify(data.currentPaleete) || '0',
           brightness: JSON.stringify(data.currentBrightness) || '100',
-          amountLed: JSON.stringify(data.CurrentAmountLed) || '60',
+          amountLed: JSON.stringify(data.currentAmountLed) || '60',
           speed: JSON.stringify(data.currentSpeed) || '20',
         })
         return true
