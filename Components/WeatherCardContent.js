@@ -22,14 +22,13 @@ export default function WeatherCardContent({ deviceObject }) {
       }
     }
     catch (e) {
-      console.log('syncData error ', e)
+      console.log('getData error ', e)
       return;
     }
   }
 
   useEffect(() => {
     const interval10 = setInterval(getData, 5000);
-
     return () => {
       clearInterval(interval10);
     };
